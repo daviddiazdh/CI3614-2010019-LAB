@@ -40,6 +40,10 @@ productoParesRec (x:xs) = if (mod x 2 == 0) then x * productoParesRec(xs) else p
 -- devuelve Right Int. Si la conversión falla (porque la cadena no es puramente
 -- numérica), devuelve Left String con la cadena original transformada a mayúsculas.
 -- Nota: Necesitarás funciones auxiliares para el parseo seguro y la conversión a mayúsculas.
+
+-- Tengo entendido que se podía utilizar readMaybe, pero no fue incluido en los imports de Test.hs,
+-- por eso preferí usar pattern matching
+
 parsearCondicional :: [String] -> [Either String Int]
 parsearCondicional = map parseOne
     where

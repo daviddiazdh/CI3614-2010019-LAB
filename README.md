@@ -6,7 +6,7 @@ El curso aborda los principios fundamentales de los lenguajes de programación, 
 ## Estructura del repositorio
 
 - **tarea1/**  
-  Contiene la implementación y documentación correspondiente a la **Tarea 1**, desarrollada en **Haskell**.
+  Contiene la implementación y documentación correspondiente a la **Tarea 1**, desarrollada en **Haskell**. A los casos de prueba le agregué algunos casos de prueba extra.
 
 ## Tecnologías utilizadas
 
