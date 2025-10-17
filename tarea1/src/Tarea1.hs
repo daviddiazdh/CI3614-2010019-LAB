@@ -17,7 +17,7 @@ import Data.Char (toUpper)
 esPalindromo :: String -> Bool
 esPalindromo [] = True
 esPalindromo [_] = True
-esPalindromo palabra = last(palabra) == head(palabra) && esPalindromo(init(tail(palabra)))
+esPalindromo (x:xs) = last xs == x && esPalindromo (init xs)
 
 -------------------------------------------------------------------------------
 -- Problema 2: Producto de Elementos Pares en una Lista
@@ -71,7 +71,7 @@ sumaAcumuladaCondicional x y = foldl(+) 0 (filter (\i -> i > x) y)
 -- suma de x e y (x+y) es un número impar. Utiliza Listas por Comprensión para
 -- la implementación.
 coordenadasImpares :: Int -> [(Int, Int)]
-coordenadasImpares n = [(x, y) | x <- [1..n], y <-[1..n], (\(i, j) -> mod (i + j) 2 == 1)(x, y) ]
+coordenadasImpares n = [(x, y) | x <- [1..n], y <-[1..n], odd(x + y)]
 
 -------------------------------------------------------------------------------
 -- Problema 6: Descomposición Segura de Lista

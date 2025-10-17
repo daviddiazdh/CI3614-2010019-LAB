@@ -28,6 +28,16 @@ testPalindromoNoPalindromo = "No palíndromo" ~: esPalindromo "casa" ~?= False
 testPalindromoGrande :: Test
 testPalindromoGrande = "Palíndromo largo" ~: esPalindromo (replicate 1000 'a') ~?= True
 
+testPalindromoEspacios :: Test
+testPalindromoEspacios = "Palíndromo con espacios" ~: esPalindromo "anita lava la tina" ~?= False
+-- Nota: la función actual distingue espacios y mayúsculas, por eso debe dar False
+
+testPalindromoMayusMinus :: Test
+testPalindromoMayusMinus = "Palíndromo con mayúsculas/minúsculas distintas" ~: esPalindromo "Oso" ~?= False
+
+testPalindromoNumerico :: Test
+testPalindromoNumerico = "Palíndromo numérico" ~: esPalindromo "12321" ~?= True
+
 -------------------------------------------------------------------------------
 -- 2. Pruebas para productoParesRec
 -------------------------------------------------------------------------------
@@ -46,6 +56,15 @@ testProductoParesRecConCero = "Incluye cero" ~: productoParesRec [0,2,4] ~?= 0
 
 testProductoParesRecGrande :: Test
 testProductoParesRecGrande = "Lista grande" ~: productoParesRec (replicate 100 2) ~?= 2^100
+
+testProductoParesRecNegativos :: Test
+testProductoParesRecNegativos = "Pares negativos" ~: productoParesRec [-2, -4, 3] ~?= 8
+
+testProductoParesRecMixto :: Test
+testProductoParesRecMixto = "Mixto pares/impares" ~: productoParesRec [1, 2, 3, 4, 5, 6] ~?= 48
+
+testProductoParesRecUnSoloPar :: Test
+testProductoParesRecUnSoloPar = "Un solo par" ~: productoParesRec [5, 7, 8] ~?= 8
 
 -------------------------------------------------------------------------------
 -- 3. Pruebas para parsearCondicional
@@ -67,6 +86,21 @@ testParsearCondicionalMixto = "Mixto" ~: parsearCondicional ["12","abc","34"] ~?
 testParsearCondicionalNegativo :: Test
 testParsearCondicionalNegativo = "Negativo" ~: parsearCondicional ["-5"] ~?= [Right (-5)]
 
+
+testParsearCondicionalEspacios :: Test
+testParsearCondicionalEspacios = "Cadena con espacios" ~: parsearCondicional [" 12 "] ~?= [Left " 12 "]
+
+testParsearCondicionalCadenasMixtas :: Test
+testParsearCondicionalCadenasMixtas = "Cadena alfanumérica" ~: parsearCondicional ["123a"] ~?= [Left "123A"]
+
+testParsearCondicionalMayusculas :: Test
+testParsearCondicionalMayusculas = "Cadena no numérica mayúsculas" ~: parsearCondicional ["ABC"] ~?= [Left "ABC"]
+
+testParsearCondicionalMultiples :: Test
+testParsearCondicionalMultiples = "Mixto largo" ~:
+    parsearCondicional ["1", "hola", "-2", "3x", "99"]
+    ~?= [Right 1, Left "HOLA", Right (-2), Left "3X", Right 99]
+
 -------------------------------------------------------------------------------
 -- 4. Pruebas para sumaAcumuladaCondicional
 -------------------------------------------------------------------------------
@@ -83,6 +117,15 @@ testSumaCondicionalTodosMenores = "Todos menores" ~: sumaAcumuladaCondicional 10
 testSumaCondicionalMixto :: Test
 testSumaCondicionalMixto = "Mixto" ~: sumaAcumuladaCondicional 2.0 [1.0,2.0,3.0,4.0] ~?= 7.0
 
+testSumaCondicionalNegativos :: Test
+testSumaCondicionalNegativos = "Umbral negativo" ~: sumaAcumuladaCondicional (-5) [-2, 0, 5] ~?= 3.0
+
+testSumaCondicionalIgualUmbral :: Test
+testSumaCondicionalIgualUmbral = "Elementos iguales al umbral" ~: sumaAcumuladaCondicional 5 [5, 5.1, 4.9] ~?= 5.1
+
+testSumaCondicionalDecimales :: Test
+testSumaCondicionalDecimales = "Decimales varios" ~: sumaAcumuladaCondicional 1.5 [1.0, 2.5, 3.5] ~?= 6.0
+
 -------------------------------------------------------------------------------
 -- 5. Pruebas para coordenadasImpares
 -------------------------------------------------------------------------------
@@ -95,6 +138,9 @@ testCoordenadasImparesN1 = "N=1" ~: coordenadasImpares 1 ~?= []
 
 testCoordenadasImparesN3 :: Test
 testCoordenadasImparesN3 = "N=3" ~: coordenadasImpares 3 ~?= [(1,2),(2,1),(2,3),(3,2)]
+
+testCoordenadasImparesN0 :: Test
+testCoordenadasImparesN0 = "N=0" ~: coordenadasImpares 0 ~?= []
 
 -------------------------------------------------------------------------------
 -- 6. Pruebas para descomponerListaSegura
@@ -109,6 +155,18 @@ testDescomponerListaSeguraVacia = "Lista vacía" ~: descomponerListaSegura ([] :
 testDescomponerListaSeguraLarga :: Test
 testDescomponerListaSeguraLarga = "Lista larga" ~: descomponerListaSegura [1..1000] ~?= Just (1, [2..1000])
 
+testCoordenadasImparesN4 :: Test
+testCoordenadasImparesN4 = "N=4" ~:
+    coordenadasImpares 4 ~?= [(1,2),(1,4),(2,1),(2,3),(3,2),(3,4),(4,1),(4,3)]
+
+testDescomponerListaSeguraStrings :: Test
+testDescomponerListaSeguraStrings = "Lista de strings" ~:
+    descomponerListaSegura ["uno","dos","tres"] ~?= Just ("uno", ["dos","tres"])
+
+testDescomponerListaSeguraBooleans :: Test
+testDescomponerListaSeguraBooleans = "Lista de booleanos" ~:
+    descomponerListaSegura [True, False] ~?= Just (True, [False])
+
 -------------------------------------------------------------------------------
 -- Ejecución Principal
 -------------------------------------------------------------------------------
@@ -121,30 +179,47 @@ allTests = TestList
     , TestLabel "Palíndromo un carácter" testPalindromoUnCaracter
     , TestLabel "No palíndromo" testPalindromoNoPalindromo
     , TestLabel "Palíndromo largo" testPalindromoGrande
+    , TestLabel "Palíndromo con espacios" testPalindromoEspacios
+    , TestLabel "Palíndromo mayúsculas/minúsculas" testPalindromoMayusMinus
+    , TestLabel "Palíndromo numérico" testPalindromoNumerico
 
     , TestLabel "Problema 2: productoParesRec" testProductoParesRec
     , TestLabel "Producto pares vacía" testProductoParesRecVacio
     , TestLabel "Producto pares sin pares" testProductoParesRecSinPares
     , TestLabel "Producto pares con cero" testProductoParesRecConCero
     , TestLabel "Producto pares grande" testProductoParesRecGrande
+    , TestLabel "Pares negativos" testProductoParesRecNegativos
+    , TestLabel "Mixto pares/impares" testProductoParesRecMixto
+    , TestLabel "Un solo par" testProductoParesRecUnSoloPar
 
     , TestLabel "Problema 3: parsearCondicional" testParsearCondicional
     , TestLabel "Parsear condicional vacío" testParsearCondicionalVacio
     , TestLabel "Parsear condicional mixto" testParsearCondicionalMixto
     , TestLabel "Parsear condicional negativo" testParsearCondicionalNegativo
+    , TestLabel "Cadena con espacios" testParsearCondicionalEspacios
+    , TestLabel "Cadena alfanumérica" testParsearCondicionalCadenasMixtas
+    , TestLabel "Cadena mayúsculas" testParsearCondicionalMayusculas
+    , TestLabel "Mixto largo" testParsearCondicionalMultiples
 
     , TestLabel "Problema 4: sumaAcumuladaCondicional" testSumaCondicional
     , TestLabel "Suma condicional vacía" testSumaCondicionalVacio
     , TestLabel "Suma condicional todos menores" testSumaCondicionalTodosMenores
     , TestLabel "Suma condicional mixto" testSumaCondicionalMixto
+    , TestLabel "Suma condicional con negativos" testSumaCondicionalNegativos
+    , TestLabel "Suma condicional igual al umbral" testSumaCondicionalIgualUmbral
+    , TestLabel "Suma condicional decimales" testSumaCondicionalDecimales
 
     , TestLabel "Problema 5: coordenadasImpares" testCoordenadasImpares
     , TestLabel "Coordenadas impares N=1" testCoordenadasImparesN1
     , TestLabel "Coordenadas impares N=3" testCoordenadasImparesN3
+    , TestLabel "Coordenadas impares N=0" testCoordenadasImparesN0
+    , TestLabel "Coordenadas impares N=4" testCoordenadasImparesN4
 
     , TestLabel "Problema 6: descomponerListaSegura" testDescomponerListaSegura
     , TestLabel "Descomponer lista vacía" testDescomponerListaSeguraVacia
     , TestLabel "Descomponer lista larga" testDescomponerListaSeguraLarga
+    , TestLabel "Descomponer lista de strings" testDescomponerListaSeguraStrings
+    , TestLabel "Descomponer lista de booleanos" testDescomponerListaSeguraBooleans
     ]
 
 main :: IO ()
